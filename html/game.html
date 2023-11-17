@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Woordraden Spel</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>Woordraden Spel</h1>
+  <p id="hint">Aanwijzing: <span id="displayHint"></span></p>
+  <p id="wordToGuess">Woord: <span id="displayWord"></span></p>
+  <label for="guess">Jouw gok: </label>
+  <input type="text" id="guess" maxlength="1">
+  <button onclick="checkGuess()">Controleer</button>
+
+  <script>
+    // Woordenlijst
+    const woordenlijst = ["javascript", "programmeren", "ontwikkelen", "code", "html", "css"];
+
+    // Kies willekeurig een woord
+    let teRadenWoord = woordenlijst[Math.floor(Math.random() * woordenlijst.length)];
+
+    // Array om de geraden letters op te slaan
+    let geradenLetters = [];
+
+    // Functie om het te raden woord weer te geven met onthulde letters
+    function displayWord() {
+      let display = "";
+      for (let letter of teRadenWoord) {
+        if (geradenLetters.includes(letter)) {
+          display += letter + " ";
+        } else {
+          display += "_ ";
+        }
+      }
+      document.getElementById("displayWord").innerText = display;
+    }
+
+    // Functie om een willekeurige aanwijzing te geven
+    function getHint() {
+      const hints = ["Een programmeertaal", "Stijltaal voor webpagina's", "Staat voor HyperText Markup Language"];
+      return hints[Math.floor(Math.random() * hints.length)];
+    }
+
+    // Start het spel
+    function startGame() {
+      // Kies een nieuw woord als het spel opnieuw wordt gestart
+      teRadenWoord = woordenlijst[Math.floor(Math.random() * woordenlijst.length)];
+      
+      // Leeg de array met geraden letters
+      geradenLetters = [];
+
+      // Geef een nieuwe aanwijzing
+      const hint = getHint();
+      document.getElementById("displayHint").innerText = hint;
+
+      // Toon het te raden woord met onthulde letters
+      displayWord();
+    }
+
+    // Controleer de ingevoerde gok
+    function checkGuess() {
+      const guessInput = document.getElementById("guess");
+      const guess = guessInput.value.toLowerCase();
+
+      if (guess.length === 1 && guess.match(/[a-z]/i)) {
+        // Voeg de letter toe aan de lijst met geraden letters
+        geradenLetters.push(guess);
+
+        // Toon het bijgewerkte te raden woord
+        displayWord();
+
+        // Controleer of het woord is geraden
+        if (!teRadenWoord.split("").some(letter => !geradenLetters.includes(letter))) {
+          alert("Gefeliciteerd! Je hebt het woord geraden!");
+          startGame();
+        }
+      } else {
+        alert("Voer een geldige letter in.");
+      }
+
+      // Wis het invoerveld
+      guessInput.value = "";
+    }
+
+    // Start het spel bij het laden van de pagina
+    startGame();
+  </script>
+</body>
+</html>
